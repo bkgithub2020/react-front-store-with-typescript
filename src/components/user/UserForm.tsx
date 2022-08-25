@@ -1,24 +1,17 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Typography from '@mui/material/Typography';
-import Checkbox from '@mui/material/Checkbox';
-import FormHelperText from '@mui/material/FormHelperText';
 import axios from 'axios';
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { LoadingButton } from '@mui/lab';
-import { literal, object, string, TypeOf } from 'zod';
+import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormInput from './FormInput';
 
@@ -81,7 +74,9 @@ const userSchema = object({
     firstName: string()
         .nonempty('First Name is required')
         .max(32, 'Name must be less than 100 characters'),
-    email: string().nonempty('Email is required').email('Email is invalid')
+    email: string().nonempty('Email is required').email('Email is invalid'),
+    lastName: string(),
+    maidenName: string()
 });
 
 type UserInput = TypeOf<typeof userSchema>;
