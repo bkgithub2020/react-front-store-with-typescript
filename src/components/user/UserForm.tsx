@@ -81,10 +81,11 @@ const userSchema = object({
 
 type UserInput = TypeOf<typeof userSchema>;
 
-export default function UserForm({ callback }: any) {
-    const [open, setOpen] = React.useState(false);
+export default function UserForm({ callback, onClose, modalTitle, userData }: any) {
+    const [open, setOpen] = React.useState(true);
     const [loading, setLoading] = useState(false);
     const { addPersonBtn } = useStyles();
+    console.log("userData", userData)
 
     const methods = useForm<UserInput>({
         resolver: zodResolver(userSchema),
@@ -104,36 +105,16 @@ export default function UserForm({ callback }: any) {
     }, [isSubmitSuccessful]);
 
     const onSubmitHandler: SubmitHandler<UserInput> = async (values) => {
-        await axios.post('/users/add', values)
-            .then(function (response) {
-                setOpen(false);//Close popup
-                callback(response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    };
 
-
-    const handleClickOpen = () => {
-        setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
+        onClose();
     };
 
     return (
-        <div>
-            <Button
-                variant="outlined"
-                color="secondary"
-                startIcon={<PersonAddIcon />}
-                className={addPersonBtn}
-                onClick={handleClickOpen}
-            >
-                New User
-            </Button>
+        <>
             <Dialog open={open} onClose={handleClose}>
                 <BootstrapDialog
                     onClose={handleClose}
@@ -141,52 +122,9 @@ export default function UserForm({ callback }: any) {
                     open={open}
                 >
                     <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                        Modal title
+                        {modalTitle} User
                     </BootstrapDialogTitle>
                     <DialogContent dividers>
-                        {/* <Box
-                            component="form"
-                            sx={{
-                                '& .MuiTextField-root': { m: 1, width: '95%', maxWidth: '95%' },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <div>
-                                <TextField
-                                    label="First Name"
-                                    helperText={errors.firstName?.message}
-                                    {...register("firstName", { required: "First name is required" })}
-                                    error={errors.firstName ? true : false}
-                                    onChange={handleChange}
-                                    value={formStatee.values.firstName}
-                                />
-                                <TextField
-                                    label="Last Name"
-                                    helperText={errors.lastName && "Last name is required"}
-                                    {...register("lastName", { required: true })}
-                                    error={errors.lastName ? true : false}
-                                    onChange={handleChange}
-                                    value={formStatee.values.lastName}
-                                />
-                                <TextField
-                                    label="Maiden Name"
-                                    {...register("maidenName")}
-                                    onChange={handleChange}
-                                    value={formStatee.values.maidenName}
-                                />
-                                <TextField
-                                    label="Email"
-                                    helperText={errors.email && "Email is required"}
-                                    {...register("email", { required: true })}
-                                    error={errors.email ? true : false}
-                                    onChange={handleChange}
-                                    value={formStatee.values.email}
-                                />
-
-                            </div>
-                        </Box> */}
-
                         <FormProvider {...methods}>
                             <Box
                                 component='form'
@@ -242,6 +180,6 @@ export default function UserForm({ callback }: any) {
                     </DialogContent>
                 </BootstrapDialog>
             </Dialog>
-        </div>
+        </>
     );
 }
